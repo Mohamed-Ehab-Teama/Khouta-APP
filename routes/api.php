@@ -37,10 +37,10 @@ Route::middleware('auth:sanctum')
         // Logout
         Route::post('/logout', [AuthController::class, 'logout']);
 
-        // Reset Password Routes
-        Route::post('/forget-password', [AuthController::class, 'sendOTP']);
-        Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
     });
+    // Reset Password Routes
+    Route::post('/forget-password', [AuthController::class, 'sendOTP']);
+    Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
 
 
 

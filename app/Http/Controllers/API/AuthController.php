@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Mail\OtpMail;
 use App\Models\User;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
@@ -37,7 +38,6 @@ class AuthController extends Controller
 
 
 
-
     // ====================     Login User:     ==================== //
     public function login(UserLoginRequest $request)
     {
@@ -69,7 +69,7 @@ class AuthController extends Controller
     {
         // Validate the Email
         $request->validate([
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:password_reset_otps,email',
         ]);
 
         // Generate OTP
@@ -85,7 +85,7 @@ class AuthController extends Controller
         );
 
         // Send OTP to your Email
-        // Mail::to($request->email)->send(new YourOtpMail($opt));
+        Mail::to($request->email)->send(new OtpMail($otp));
 
 
         return response()->json([
@@ -102,7 +102,7 @@ class AuthController extends Controller
     public function verifyOTP(Request $request)
     {
         $request->validate([
-            'email'     => 'required|email',
+            'email'     => 'required|email|unique:password_reset_otps,email',
             'otp'       => 'required|digits:4',
         ]);
 
