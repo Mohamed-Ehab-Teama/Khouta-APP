@@ -27,10 +27,19 @@ use App\Http\Controllers\API\AuthController;
 Route::middleware('auth:sanctum')
     ->prefix('auth')
     ->controller(AuthController::class)->group(function () {
+
         // Register
         Route::post('/register', [AuthController::class, 'register']);
+
+        // Login
         Route::post('/login', [AuthController::class, 'login']);
+
+        // Logout
         Route::post('/logout', [AuthController::class, 'logout']);
+
+        // Reset Password Routes
+        Route::post('/forget-password', [AuthController::class, 'sendOTP']);
+        Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
     });
 
 
