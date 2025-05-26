@@ -23,10 +23,11 @@ use App\Http\Controllers\API\AuthController;
 
 
 
-// =======================      User Routes     =========================== //
+// =======================      User Auth Routes     =========================== //
 Route::middleware('auth:sanctum')
     ->prefix('auth')
-    ->controller(AuthController::class)->group(function () {
+    ->controller(AuthController::class)
+    ->group(function () {
 
         // Register
         Route::post('/register', [AuthController::class, 'register']);
@@ -36,11 +37,14 @@ Route::middleware('auth:sanctum')
 
         // Logout
         Route::post('/logout', [AuthController::class, 'logout']);
-
     });
-    // Reset Password Routes
-    Route::post('/forget-password', [AuthController::class, 'sendOTP']);
-    Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
+
+// Reset Password Routes
+Route::post('/forget-password', [AuthController::class, 'sendOTP']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
+// =======================      End User Auth Routes     =========================== //
+
+
 
 
 
@@ -49,12 +53,6 @@ Route::controller(UserController::class)
     ->prefix('users')
     ->group(function () {
 
-        Route::apiResource('users', UserController::class);
+        Route::apiResource('users', UserController::class)->except('store');
     });
-
-
-
-// =======================      Testing     =========================== //
-Route::get('/', function () {
-    return "Working";
-});
+// =======================      End User Routes     =========================== //

@@ -85,7 +85,7 @@ class AuthController extends Controller
         );
 
         // Send OTP to your Email
-        Mail::to($request->email)->send(new OtpMail($otp));
+        // Mail::to($request->email)->send(new OtpMail($otp));
 
 
         return response()->json([
