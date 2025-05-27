@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
+use App\Http\Requests\AddChildRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Models\Child;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
@@ -52,6 +54,34 @@ class ProfileController extends Controller
         return ApiResponse::sendResponse(400, "Something Went Wrong",[]);
         
     }
+
+
+
+    // Add Child
+    public function addChild(Request $request, AddChildRequest $addChildRequest)
+    {
+        $childData = $addChildRequest->validated();
+
+        $imagePath = null;
+
+        if ($addChildRequest->hasFile('image'))
+        {
+            $imagePath = $addChildRequest->file('image')->store('children', 'public');
+            $childData['image'] = $imagePath;
+        }
+
+        // Assign Child To Parent User
+        $childData['parent_id'] = $request->user()->id;
+
+        // Create New Child
+        $child = Child::create($childData);
+
+        $childData['image'] = $childData['image'] ? asset('storage/'. $child->image) : null;
+
+        return ApiResponse::sendResponse(200, "Child Added Successfully", $childData);
+
+    }
+
 
 
 }

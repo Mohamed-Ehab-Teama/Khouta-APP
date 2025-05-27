@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->date('birth_date');
-            $table->foreignId('parent_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('parent_id');
+            $table->foreign('parent_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

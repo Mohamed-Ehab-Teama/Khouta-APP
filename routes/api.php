@@ -56,10 +56,13 @@ Route::middleware('auth:sanctum')
     ->controller(ProfileController::class)
     ->group(function () {
         // Show Profile
-        Route::get('/profile', [ProfileController::class, 'profile']);
+        Route::get('/profile', 'profile');
         
         // Update Profile
-        Route::put('/profile', [ProfileController::class, 'updateProfile']);
+        Route::put('/profile', 'updateProfile');
+
+        // Add Child
+        Route::post('/child', 'addChild');
     });
 // =======================      End Profile Routes     =========================== //
 
