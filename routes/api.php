@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\ChildController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,13 +49,32 @@ Route::prefix('auth')
 
 
 
-// =======================      User Routes     =========================== //
-Route::controller(UserController::class)
-    ->prefix('users')
-    ->group(function () {
 
-        Route::apiResource('users', UserController::class)->except('store');
+// =======================      Profile Routes     =========================== //
+Route::middleware('auth:sanctum')
+    ->prefix('profile')
+    ->controller(ProfileController::class)
+    ->group(function () {
+        // Show Profile
+        Route::get('/profile', [ProfileController::class, 'profile']);
+        
+        // Update Profile
+        Route::put('/profile', [ProfileController::class, 'updateProfile']);
     });
+// =======================      End Profile Routes     =========================== //
+
+
+
+
+
+
+// =======================      User Routes     =========================== //
+// Route::controller(UserController::class)
+//     ->prefix('users')
+//     ->group(function () {
+
+//         Route::apiResource('users', UserController::class)->except('store');
+//     });
 // =======================      End User Routes     =========================== //
 
 
@@ -62,10 +82,10 @@ Route::controller(UserController::class)
 
 
 // =======================      Children Routes     =========================== //
-Route::controller(ChildController::class)
-    ->prefix('childs')
-    ->group(function () {
+// Route::controller(ChildController::class)
+//     ->prefix('childs')
+//     ->group(function () {
 
-        Route::apiResource('childs', ChildController::class);
-    });
+//         Route::apiResource('childs', ChildController::class);
+//     });
 // =======================      End Children Routes     =========================== //
