@@ -24,8 +24,7 @@ use App\Http\Controllers\API\AuthController;
 
 
 // =======================      User Auth Routes     =========================== //
-Route::middleware('auth:sanctum')
-    ->prefix('auth')
+Route::prefix('auth')
     ->controller(AuthController::class)
     ->group(function () {
 
@@ -36,12 +35,12 @@ Route::middleware('auth:sanctum')
         Route::post('/login', [AuthController::class, 'login']);
 
         // Logout
-        Route::post('/logout', [AuthController::class, 'logout']);
-    });
+        Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-// Reset Password Routes
-Route::post('/forget-password', [AuthController::class, 'sendOTP']);
-Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
+        // Reset Password Routes
+        Route::post('/forget-password', [AuthController::class, 'sendOTP']);
+        Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
+    });
 // =======================      End User Auth Routes     =========================== //
 
 

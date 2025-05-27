@@ -34,8 +34,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = Auth::user()->id;
-        dd($id);
+        $id = $this->route()->user->id ?? null;
         return [
             'name' => 'string|required',
             'email' => 'string|email|unique:users,email,'.$id,
