@@ -10,9 +10,10 @@ class ChildController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($user_id)
     {
-        //
+        $childs = Child::where('parent_id', $user_id)->get();
+        
     }
 
     /**

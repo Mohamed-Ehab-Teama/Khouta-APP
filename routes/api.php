@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\ChildController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,3 +56,16 @@ Route::controller(UserController::class)
         Route::apiResource('users', UserController::class)->except('store');
     });
 // =======================      End User Routes     =========================== //
+
+
+
+
+
+// =======================      Children Routes     =========================== //
+Route::controller(ChildController::class)
+    ->prefix('childs')
+    ->group(function () {
+
+        Route::apiResource('childs', ChildController::class);
+    });
+// =======================      End Children Routes     =========================== //
