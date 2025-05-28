@@ -13,7 +13,7 @@ class Child extends Model
     // Relation To User
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'parent_id');
     }
 
 

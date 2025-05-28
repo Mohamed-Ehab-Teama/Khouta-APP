@@ -55,7 +55,7 @@ class AuthController extends Controller
 
 
 
-    // ====================     Login User:     ==================== //
+    // ====================     LogOut User:     ==================== //
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

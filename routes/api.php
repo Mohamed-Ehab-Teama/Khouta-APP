@@ -63,32 +63,14 @@ Route::middleware('auth:sanctum')
 
         // Add Child
         Route::post('/child', 'addChild');
+
+        // Get All Children
+        Route::get('/children', 'listAllCgildren');
+
+        // Update Child
+        Route::put('/child/{id}/edit', 'updateChild');
     });
 // =======================      End Profile Routes     =========================== //
 
 
 
-
-
-
-// =======================      User Routes     =========================== //
-// Route::controller(UserController::class)
-//     ->prefix('users')
-//     ->group(function () {
-
-//         Route::apiResource('users', UserController::class)->except('store');
-//     });
-// =======================      End User Routes     =========================== //
-
-
-
-
-
-// =======================      Children Routes     =========================== //
-// Route::controller(ChildController::class)
-//     ->prefix('childs')
-//     ->group(function () {
-
-//         Route::apiResource('childs', ChildController::class);
-//     });
-// =======================      End Children Routes     =========================== //
