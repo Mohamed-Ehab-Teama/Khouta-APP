@@ -22,7 +22,6 @@ class ProfileController extends Controller
     }
 
 
-
     // Update Profile Data
     public function updateProfile(Request $request, UpdateProfileRequest $updateProfileRequest)
     {
@@ -95,7 +94,6 @@ class ProfileController extends Controller
 
 
 
-
     // Edit Child
     public function updateChild(Request $request, UpdateChildRequest $updateChildRequest, $id)
     {
@@ -127,7 +125,7 @@ class ProfileController extends Controller
             if ($child->image && Storage::disk('public')->exists($child->image)) {
                 Storage::disk('public')->delete($child->image);
             }
-            
+
             // Store New Image
             $child->image = $updateChildRequest->file('image')->store('children', 'public');
         }
