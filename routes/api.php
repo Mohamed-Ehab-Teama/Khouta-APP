@@ -64,6 +64,9 @@ Route::middleware('auth:sanctum')
         // Add Child
         Route::post('/child', 'addChild');
 
+        // Show Child
+        Route::get('/child/{id}', 'showChild');
+
         // Get All Children
         Route::get('/children', 'listAllCgildren');
 

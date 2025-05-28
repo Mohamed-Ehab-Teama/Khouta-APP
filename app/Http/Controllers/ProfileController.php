@@ -68,6 +68,23 @@ class ProfileController extends Controller
     }
 
 
+    // Show Specific Child
+    public function showChild(Request $request, $id)
+    {
+        // Get User ID
+        $user_id = $request->user()->id;
+        // Get Child
+        $child = Child::where('id', $id)
+            ->where('parent_id', $user_id)
+            ->get();
+
+        if (!$child) {
+            return ApiResponse::sendResponse(404, "No Child Found OR Unauthenticated", []);
+        }
+
+        return ApiResponse::sendResponse(200, "Child Retrieved Successfully", $child);
+    }
+
 
     // Add Child
     public function addChild(Request $request, AddChildRequest $addChildRequest)
@@ -91,7 +108,6 @@ class ProfileController extends Controller
 
         return ApiResponse::sendResponse(200, "Child Added Successfully", $childData);
     }
-
 
 
     // Edit Child
