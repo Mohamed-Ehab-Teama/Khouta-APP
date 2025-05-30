@@ -13,6 +13,7 @@ use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Resources\RegisteredUserResource;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
@@ -64,37 +65,35 @@ class AuthController extends Controller
 
 
 
+
+
     // ====================     Forget-Passowrd User:     ==================== //
     public function sendOTP(Request $request)
     {
         // Validate the Email
         $request->validate([
-            'email' => 'required|email|unique:password_reset_otps,email',
+            'email' => 'required|email|exists:users,email',
         ]);
 
+        // Get User
+        $user = User::where('email', $request->email)->first();
+
         // Generate OTP
-        $otp = rand(1000, 9999);
+        $otp = random_int(1000, 9999);
 
         // Store OTP in DB
-        DB::table('password_reset_otps')->updateOrInsert(
-            ['email' => $request->email],
-            [
-                'otp' => $otp,
-                'created_at' => Carbon::now(),
-            ],
-        );
+        $user->update([
+            'otp_code' => $otp,
+            'otp_expires_at' => Carbon::now()->addMinutes(15),
+        ]);
 
-        // Send OTP to your Email
-        // Mail::to($request->email)->send(new OtpMail($otp));
-
-
+        // Return OTP
         return response()->json([
             'status' => true,
             'message' => 'OTP code sent Successfully',
-            'otp' => $otp,          // For Test
+            'otp' => $otp,          
         ], 200);
     }
-
 
 
 
@@ -102,33 +101,23 @@ class AuthController extends Controller
     public function verifyOTP(Request $request)
     {
         $request->validate([
-            'email'     => 'required|email|unique:password_reset_otps,email',
+            'email'     => 'required|email',
             'otp'       => 'required|digits:4',
         ]);
 
+        // Get User
+        $user = User::where('email', $request->email)->first();
 
-        $record = DB::table('password_reset_otps')
-            ->where('email', $request->email)
-            ->where('otp', $request->otp)
-            ->first();
-
-        
-        if (!$record)
+        // Check on OTP
+        if (!$user ||  $user->otp_code !== $request->otp)
         {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid OTP',
-            ], 404);
+            return ApiResponse::sendResponse(200, 'Invalid OTP', []);
         }
 
-
-        // Check if OTP is Expired
-        if ( Carbon::parse($record->created_at)->addMinutes(10)->isPast() )
+        // Check of OTP Expired
+        if ( Carbon::now()->gt($user->otp_expires_at) )
         {
-            return response()->json([
-                'status' => false,
-                'message' => 'Expired OTP',
-            ], 400);
+            return ApiResponse::sendResponse(200, "OTP has expired", []);
         }
 
 
@@ -136,7 +125,47 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'OTP Verified Successfully',
+            'otp' => $request->otp,
         ], 200);
 
+    }
+
+
+
+    // ====================    Set New Password     ==================== //
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required|digits:4',
+            'password'   => 'required|min:8|confirmed',
+        ]);
+
+        // Get User
+        $user = User::where('email', $request->email)->first();
+
+        // Check on OTP
+        if (!$user ||  $user->otp_code !== $request->otp)
+        {
+            return ApiResponse::sendResponse(200, 'Invalid OTP', []);
+        }
+
+        // Check of OTP Expired
+        if ( Carbon::now()->gt($user->otp_expires_at) )
+        {
+            return ApiResponse::sendResponse(200, "OTP has expired", []);
+        }
+
+        $user->update([
+            'password'  => Hash::make($request->password),
+            'otp_code'  => null,
+            'otp_expires_at'  => null,
+        ]);
+
+
+        return response()->json([
+            'status' => true, 
+            'message' => 'Password reset successfully'
+        ], 200);
     }
 }

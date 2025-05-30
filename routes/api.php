@@ -42,6 +42,7 @@ Route::prefix('auth')
         // Reset Password Routes
         Route::post('/forget-password', [AuthController::class, 'sendOTP']);
         Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
+        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     });
 // =======================      End User Auth Routes     =========================== //
 
